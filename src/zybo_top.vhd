@@ -12,7 +12,7 @@ use ieee.std_logic_1164.all;
 --! arithmetic functions.
 use ieee.numeric_std.all;
 --! modulos propios
-use zybo_regs_pkg.all;
+use work.zybo_regs_pkg.all;
 
 --! @brief   implementation
 --! @details implementation of xxx
@@ -77,9 +77,9 @@ end zybo_top;
 architecture rtl of zybo_top is
 signal r0_count : std_logic_vector(27 downto 0) := (others => '0');
 signal r0_pulse : std_logic_vector(2 downto 0) := (others => '0');
+signal r0_limit_count : std_logic_vector(31 downto 0) := (others => '0');
 signal s_user2regs : user2regs_t;
 signal s_regs2user : regs2user_t;
-signal s_limit_count : std_logic_vector(31 downto 0);
 
 begin
 
@@ -112,12 +112,18 @@ begin
     user2regs     => s_user2regs,
     regs2user     => s_regs2user
   );
-  s_limit_count <= s_regs2user.count_value;
+
+  regs_axi_regs : process(clk)
+  begin
+    if rising_edge(clk) then
+      r0_limit_count <= s_regs2user.count_value;
+    end if;
+  end process;
 
   contador_pulsos : process(clk)
   begin
     if rising_edge(clk) then
-        if (r0_count < s_limit_count) then
+        if (r0_count < r0_limit_count) then
           r0_count <= std_logic_vector(unsigned(r0_count) + 1);
           r0_pulse <= r0_pulse;
         else
