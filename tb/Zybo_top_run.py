@@ -141,8 +141,8 @@ for test in tb_generated.get_tests():
 
 #GHDL parameters.
 if(code_coverage==True):
-  Zybo_top_src_lib.add_compile_option   ("ghdl.flags"     , ["frelaxed-rules", "-fprofile-arcs","-ftest-coverage" ])
-  Zybo_top_tb_lib.add_compile_option("ghdl.flags"     , ["frelaxed-rules", "-fprofile-arcs","-ftest-coverage" ])
+  Zybo_top_src_lib.add_compile_option   ("ghdl.flags"     , ["-frelaxed-rules", "-fprofile-arcs","-ftest-coverage" ])
+  Zybo_top_tb_lib.add_compile_option("ghdl.flags"     , ["-frelaxed-rules", "-fprofile-arcs","-ftest-coverage" ])
   ui.set_sim_option("ghdl.elab_flags"      , [ "-Wl,-lgcov" ])
   ui.set_sim_option("modelsim.init_files.after_load" ,["modelsim.do"])
 else:
