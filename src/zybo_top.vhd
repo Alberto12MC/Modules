@@ -49,7 +49,7 @@ entity zybo_top is
          axi_aresetn : in  std_logic;
          -- AXI Write Address Channel
          s_axi_awaddr  : in  std_logic_vector(AXI_ADDR_WIDTH - 1 downto 0);
-         s_axi_awprot  : in  std_logic_vector(2 downto 0); -- sigasi @suppress "Unused port"
+         s_axi_awprot  : in  std_logic_vector(2 downto 0);
          s_axi_awvalid : in  std_logic;
          s_axi_awready : out std_logic;
          -- AXI Write Data Channel
@@ -59,7 +59,7 @@ entity zybo_top is
          s_axi_wready  : out std_logic;
          -- AXI Read Address Channel
          s_axi_araddr  : in  std_logic_vector(AXI_ADDR_WIDTH - 1 downto 0);
-         s_axi_arprot  : in  std_logic_vector(2 downto 0); -- sigasi @suppress "Unused port"
+         s_axi_arprot  : in  std_logic_vector(2 downto 0);
          s_axi_arvalid : in  std_logic;
          s_axi_arready : out std_logic;
          -- AXI Read Data Channel
