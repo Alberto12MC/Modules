@@ -157,7 +157,7 @@ begin
   );
 
   main : process
-    variable data_read  : std_logic_vector(31 downto 0);
+    variable v_data_out  : std_logic_vector(31 downto 0);
     variable add        : unsigned(31 downto 0) := unsigned'(x"00000000");
   begin
     test_runner_setup(runner, runner_cfg);
