@@ -11,30 +11,14 @@ use std.textio.all;
 library src_lib;
 -- use src_lib.types_declaration_zybo_top_pkg.all;
 --
-library bitvis_vip_axilite;
-use bitvis_vip_axilite.axilite_bfm_pkg.all;
---
-library uvvm_util;
-context uvvm_util.uvvm_util_context;
-use uvvm_util.methods_pkg.all;
 -- vunit
 library vunit_lib;
 context vunit_lib.vunit_context;
--- use vunit_lib.array_pkg.all;
--- use vunit_lib.lang.all;
--- use vunit_lib.string_ops.all;
--- use vunit_lib.dictionary.all;
--- use vunit_lib.path.all;
--- use vunit_lib.log_types_pkg.all;
--- use vunit_lib.log_special_types_pkg.all;
--- use vunit_lib.log_pkg.all;
--- use vunit_lib.check_types_pkg.all;
--- use vunit_lib.check_special_types_pkg.all;
--- use vunit_lib.check_pkg.all;
--- use vunit_lib.run_types_pkg.all;
--- use vunit_lib.run_special_types_pkg.all;
--- use vunit_lib.run_base_pkg.all;
--- use vunit_lib.run_pkg.all;
+context vunit_lib.vc_context;
+
+-- OSVVM
+library osvvm;
+use osvvm.RandomPkg.all;
 
 entity zybo_top_tb is
   --vunit
@@ -44,12 +28,12 @@ end;
 architecture bench of zybo_top_tb is
 
   -- Generics
-  constant AXI_ADDR_WIDTH : integer := 0;
+  constant AXI_ADDR_WIDTH : integer := 32;
   -- clock period
   constant clk_period : time := 5 ns;
   constant axi_aclk_period : time := 5 ns;
   -- Signal ports
-    signal clk           : std_logic;
+  signal clk           : std_logic;
   signal reset         : std_logic;
   signal sw0_in        : std_logic;
   signal sw1_in        : std_logic;
@@ -91,22 +75,35 @@ architecture bench of zybo_top_tb is
   signal s_axi_bvalid  : std_logic;
   signal s_axi_bready  : std_logic;
 
-  constant C_AXILITE_BFM_CONFIG : t_axilite_bfm_config := C_AXILITE_BFM_CONFIG_DEFAULT;
-  subtype ST_AXILite_32 is t_axilite_if (
-  write_address_channel (
-  awaddr(31 downto 0)),
-  write_data_channel (
-  wdata(31 downto 0),
-  wstrb(3 downto 0)),
-  read_address_channel (
-  araddr(31 downto 0)),
-  read_data_channel (
-  rdata(31 downto 0))
-  );
-  signal axilite_if : ST_AXILite_32;
-  constant BASEADDR : integer := to_integer(unsigned'(x"00000000"));
+  constant BASEADDR : std_logic_vector(31 downto 0) := x"00000000";
+  constant axil_bus : bus_master_t := new_bus(data_length => 32, address_length => 32);
+  constant COUNT_VALUE : std_logic_vector(31 downto 0) := std_logic_vector'("00000010000000000000000000000000");
 
 begin
+  -- AXI-Lite BFM
+  axi_lite_master_inst: entity vunit_lib.axi_lite_master
+    generic map (
+      bus_handle => axil_bus)
+    port map (
+      aclk    => clk,
+      arready => s_axi_arready,
+      arvalid => s_axi_arvalid,
+      araddr  => s_axi_araddr,
+      rready  => s_axi_rready,
+      rvalid  => s_axi_rvalid,
+      rdata   => s_axi_rdata,
+      rresp   => s_axi_rresp,
+      awready => s_axi_awready,
+      awvalid => s_axi_awvalid,
+      awaddr  => s_axi_awaddr,
+      wready  => s_axi_wready,
+      wvalid  => s_axi_wvalid,
+      wdata   => s_axi_wdata,
+      wstrb   => s_axi_wstrb,
+      bvalid  => s_axi_bvalid,
+      bready  => s_axi_bready,
+      bresp   => s_axi_bresp);
+
   -- Instance
   zybo_top_i : entity src_lib.zybo_top
   generic map (
@@ -135,30 +132,31 @@ begin
     led6b_out     => led6b_out,
     axi_aclk      => axi_aclk,
     axi_aresetn   => axi_aresetn,
-    s_axi_awaddr  => axilite_if.write_address_channel.awaddr,
-    s_axi_awprot  => axilite_if.write_address_channel.awprot,
-    s_axi_awvalid => axilite_if.write_address_channel.awvalid,
-    s_axi_awready => axilite_if.write_address_channel.awready,
-    s_axi_wdata   => axilite_if.write_data_channel.wdata,
-    s_axi_wstrb   => axilite_if.write_data_channel.wstrb,
-    s_axi_wvalid  => axilite_if.write_data_channel.wvalid,
-    s_axi_wready  => axilite_if.write_data_channel.wready,
-    s_axi_araddr  => axilite_if.read_address_channel.araddr,
-    s_axi_arprot  => axilite_if.read_address_channel.arprot,
-    s_axi_arvalid => axilite_if.read_address_channel.arvalid,
-    s_axi_arready => axilite_if.read_address_channel.arready,
-    s_axi_rdata   => axilite_if.read_data_channel.rdata,
-    s_axi_rresp   => axilite_if.read_data_channel.rresp,
-    s_axi_rvalid  => axilite_if.read_data_channel.rvalid,
-    s_axi_rready  => axilite_if.read_data_channel.rready,
-    s_axi_bresp   => axilite_if.write_response_channel.bresp,
-    s_axi_bvalid  => axilite_if.write_response_channel.bvalid,
-    s_axi_bready  => axilite_if.write_response_channel.bready
+    s_axi_awaddr  => s_axi_awaddr,
+    s_axi_awprot  => s_axi_awprot,
+    s_axi_awvalid => s_axi_awvalid,
+    s_axi_awready => s_axi_awready,
+    s_axi_wdata   => s_axi_wdata,
+    s_axi_wstrb   => s_axi_wstrb,
+    s_axi_wvalid  => s_axi_wvalid,
+    s_axi_wready  => s_axi_wready,
+    s_axi_araddr  => s_axi_araddr,
+    s_axi_arprot  => s_axi_arprot,
+    s_axi_arvalid => s_axi_arvalid,
+    s_axi_arready => s_axi_arready,
+    s_axi_rdata   => s_axi_rdata,
+    s_axi_rresp   => s_axi_rresp,
+    s_axi_rvalid  => s_axi_rvalid,
+    s_axi_rready  => s_axi_rready,
+    s_axi_bresp   => s_axi_bresp,
+    s_axi_bvalid  => s_axi_bvalid,
+    s_axi_bready  => s_axi_bready
   );
 
+  test_runner_watchdog(runner, 1 ms);
+
   main : process
-    variable v_data_out  : std_logic_vector(31 downto 0);
-    variable add        : unsigned(31 downto 0) := unsigned'(x"00000000");
+    variable v_rdata_out : std_logic_vector(31 downto 0);
   begin
     test_runner_setup(runner, runner_cfg);
     while test_suite loop
@@ -167,12 +165,12 @@ begin
         axi_aresetn <= '0';
         wait for 10 * axi_aclk_period;
         axi_aresetn <= '1';
-
+        -- Read reg 0
+        -- read_axi_lite(net, axil_bus, BASEADDR, axi_resp_okay, v_rdata_out);
+        read_bus(net, axil_bus, BASEADDR, v_rdata_out);
+        info("Read value: " & to_string((unsigned(v_rdata_out))));
+        check(COUNT_VALUE=v_rdata_out, "Reg value ");
         wait for 10 * axi_aclk_period;
-        axilite_if <= init_axilite_if_signals(32, 32);
-        wait for 10 * axi_aclk_period;
-        axilite_read(x"00000000", v_data_out, "Read count", axi_aclk, axilite_if);
-        wait for 100 * axi_aclk_period;
         test_runner_cleanup(runner);
       end if;
     end loop;

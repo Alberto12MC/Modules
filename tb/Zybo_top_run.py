@@ -67,38 +67,17 @@ else:
 #VUnit instance.
 ui = VUnit.from_argv()
 
-#Add Xilinx ISE libraries.
-if(ide=="ise"):
-  print("IDE ISE selected")
-  xilinx_libraries_path = "/"
+#Xilinx Vivado libraries.
+if(ide=="vivado"):
+  xilinx_libraries_path = "/opt/Xilinx/vivado-lib-comp/xilinx-vivado"
   unisim_path   = join(xilinx_libraries_path,"unisim","v08")
-  corelib_path  = join(xilinx_libraries_path,"xilinxcorelib","v08")
+  unifast_path  = join(xilinx_libraries_path,"unifast","v08")
   unimacro_path = join(xilinx_libraries_path,"unimacro","v08")
+  secureip_path = join(xilinx_libraries_path,"secureip","v08")
   ui.add_external_library("unisim",unisim_path)
-  ui.add_external_library("xilinxcorelib",corelib_path)
+  ui.add_external_library("unifast",unifast_path)
   ui.add_external_library("unimacro",unimacro_path)
-
-# #Xilinx Vivado libraries.
-# if(ide=="vivado"):
-#   print("IDE Vivado selected")
-#   if(simname=="modelsim" or simname=="MODELSIM"):
-#     xilinx_libraries_path="/opt/Xilinx/vivado-lib-comp/xilinx-vivado"
-#     unisim_path   = join(xilinx_libraries_path,"unisim")
-#     unifast_path  = join(xilinx_libraries_path,"unifast")
-#     unimacro_path = join(xilinx_libraries_path,"unimacro")
-#     secureip_path = join(xilinx_libraries_path,"secureip")
-#     xpm_path      = join(xilinx_libraries_path,"xpm")
-#     ui.add_external_library("xpm",xpm_path)
-#   else:
-#     xilinx_libraries_path = "/opt/Xilinx/vivado-lib-comp/xilinx-vivado"
-#     unisim_path   = join(xilinx_libraries_path,"unisim","v08")
-#     unifast_path  = join(xilinx_libraries_path,"unifast","v08")
-#     unimacro_path = join(xilinx_libraries_path,"unimacro","v08")
-#     secureip_path = join(xilinx_libraries_path,"secureip","v08")
-#   ui.add_external_library("unisim",unisim_path)
-#   ui.add_external_library("unifast",unifast_path)
-#   ui.add_external_library("unimacro",unimacro_path)
-#   ui.add_external_library("secureip",secureip_path)
+  ui.add_external_library("secureip",secureip_path)
 
 #UVVM libraries path.
 if (simname=="ghdl" or simname=="GHDL"):
@@ -108,13 +87,15 @@ elif (simname=="modelsim" or simname=="MODELSIM"):
   uvvm_util_root    = "/opt/Xilinx/UVVM-lib/uvvm_util"
   uvvm_axilite_root = "/opt/Xilinx/UVVM-lib/bitvis_vip_axilite"
 
-#Add UVVM libraries.
-ui.add_external_library("uvvm_util",uvvm_util_root)
-ui.add_external_library("bitvis_vip_axilite",uvvm_axilite_root)
+##############################################################################
+##############################################################################
+##############################################################################
 
-##############################################################################
-##############################################################################
-##############################################################################
+#Add verification components
+ui.add_verification_components()
+
+#Add OSVVM
+ui.add_osvvm()
 
 #Add array pkg.
 ui.add_array_util()
