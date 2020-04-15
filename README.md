@@ -6,8 +6,8 @@ Repository containing different VHDL modules.
 
 - Zybo_Example:
 
-  - Information for [Integration](./doc/README_integration.md "Integration")
-  - Information for [Development](./doc/README_development.md "Development")
+  - Information for [Integration](./doc/Zybo_Example/README_integration.md "Integration")
+  - Information for [Development](./doc/Zybo_Example/README_development.md "Development")
 
 ### Testbenchs dependencies
 
