@@ -1,10 +1,10 @@
 TOPLEVEL_LANG=vhdl
-VHDL_SOURCES = $(PWD)/../../src/zybo_regs_pkg.vhd
-VHDL_SOURCES += $(PWD)/../../src/zybo_regs.vhd
-VHDL_SOURCES += $(PWD)/../../src/zybo_top_pkg.vhd
-VHDL_SOURCES += $(PWD)/../../src/zybo_top.vhd
-TOPLEVEL=zybo_top
-MODULE=zybo_top_tb
+VHDL_SOURCES = $(PWD)/../../../src/Zybo_Example/Zybo_Example_regs_pkg.vhd
+VHDL_SOURCES += $(PWD)/../../../src/Zybo_Example/Zybo_Example_regs.vhd
+VHDL_SOURCES += $(PWD)/../../../src/Zybo_Example/Zybo_Example_pkg.vhd
+VHDL_SOURCES += $(PWD)/../../../src/Zybo_Example/Zybo_Example.vhd
+TOPLEVEL=Zybo_Example
+MODULE=Zybo_Example_tb
 SIM=ghdl
 SIM_ARGS=--wave=salida.ghws
 # COMPILE_ARGS := -fprofile-arcs -ftest-coverage -Wl,-lgcov

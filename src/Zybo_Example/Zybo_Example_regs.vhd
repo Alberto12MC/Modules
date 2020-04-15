@@ -1,8 +1,8 @@
 -- -----------------------------------------------------------------------------
--- 'ZYBO_EXAMPLE' Register Component
--- Revision: 1
+-- 'Zybo_Example' Register Component
+-- Revision: 10
 -- -----------------------------------------------------------------------------
--- Generated on 2020-03-14 at 00:25 (UTC) by airhdl version 2020.03.1
+-- Generated on 2020-04-15 at 15:06 (UTC) by airhdl version 2020.04.1
 -- -----------------------------------------------------------------------------
 -- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 -- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -21,9 +21,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.zybo_regs_pkg.all;
+use work.Zybo_Example_regs_pkg.all;
 
-entity zybo_regs is
+entity Zybo_Example_regs is
     generic(
         AXI_ADDR_WIDTH : integer := 32  -- width of the AXI address bus
     );
@@ -59,9 +59,9 @@ entity zybo_regs is
         user2regs     : in user2regs_t;
         regs2user     : out regs2user_t
     );
-end entity zybo_regs;
+end entity Zybo_Example_regs;
 
-architecture RTL of zybo_regs is
+architecture RTL of Zybo_Example_regs is
 
     -- Constants
     constant AXI_OKAY           : std_logic_vector(1 downto 0) := "00";
@@ -82,14 +82,20 @@ architecture RTL of zybo_regs is
     signal s_axi_rdata_r      : std_logic_vector(s_axi_rdata'range);
 
     -- User-defined registers
-    signal s_count_strobe_r : std_logic;
-    signal s_reg_count_value_r : std_logic_vector(31 downto 0);
+    signal s_zybo_example_version_strobe_r : std_logic;
+    signal s_reg_zybo_example_version_version : std_logic_vector(31 downto 0);
+    signal s_zybo_example_config_id_strobe_r : std_logic;
+    signal s_reg_zybo_example_config_id_config_id : std_logic_vector(31 downto 0);
+    signal s_zybo_example_count_strobe_r : std_logic;
+    signal s_reg_zybo_example_count_value_r : std_logic_vector(31 downto 0);
 
 begin
 
     ----------------------------------------------------------------------------
     -- Inputs
     --
+    s_reg_zybo_example_version_version <= user2regs.zybo_example_version_version;
+    s_reg_zybo_example_config_id_config_id <= user2regs.zybo_example_config_id_config_id;
 
     ----------------------------------------------------------------------------
     -- Read-transaction FSM
@@ -116,10 +122,14 @@ begin
             s_axi_rresp_r      <= (others => '0');
             s_axi_araddr_reg_r <= (others => '0');
             s_axi_rdata_r      <= (others => '0');
+            s_zybo_example_version_strobe_r <= '0';
+            s_zybo_example_config_id_strobe_r <= '0';
 
         elsif rising_edge(axi_aclk) then
             -- Default values:
             s_axi_arready_r <= '0';
+            s_zybo_example_version_strobe_r <= '0';
+            s_zybo_example_config_id_strobe_r <= '0';
 
             case v_state_r is
 
@@ -140,10 +150,24 @@ begin
                     v_addr_hit := false;
                     v_rdata_r  := (others => '0');
 
-                    -- register 'COUNT' at address offset 0x0
-                    if s_axi_araddr_reg_r = resize(COUNT_OFFSET, AXI_ADDR_WIDTH) then
+                    -- register 'Zybo_Example_VERSION' at address offset 0x0
+                    if s_axi_araddr_reg_r = resize(ZYBO_EXAMPLE_VERSION_OFFSET, AXI_ADDR_WIDTH) then
                         v_addr_hit := true;
-                        v_rdata_r(31 downto 0) := s_reg_count_value_r;
+                        v_rdata_r(31 downto 0) := s_reg_zybo_example_version_version;
+                        s_zybo_example_version_strobe_r <= '1';
+                        v_state_r := READ_RESPONSE;
+                    end if;
+                    -- register 'Zybo_Example_CONFIG_ID' at address offset 0x4
+                    if s_axi_araddr_reg_r = resize(ZYBO_EXAMPLE_CONFIG_ID_OFFSET, AXI_ADDR_WIDTH) then
+                        v_addr_hit := true;
+                        v_rdata_r(31 downto 0) := s_reg_zybo_example_config_id_config_id;
+                        s_zybo_example_config_id_strobe_r <= '1';
+                        v_state_r := READ_RESPONSE;
+                    end if;
+                    -- register 'Zybo_Example_COUNT' at address offset 0x8
+                    if s_axi_araddr_reg_r = resize(ZYBO_EXAMPLE_COUNT_OFFSET, AXI_ADDR_WIDTH) then
+                        v_addr_hit := true;
+                        v_rdata_r(31 downto 0) := s_reg_zybo_example_count_value_r;
                         v_state_r := READ_RESPONSE;
                     end if;
                     --
@@ -203,14 +227,14 @@ begin
             s_axi_bvalid_r     <= '0';
             s_axi_bresp_r      <= (others => '0');
             --
-            s_count_strobe_r <= '0';
-            s_reg_count_value_r <= COUNT_VALUE_RESET;
+            s_zybo_example_count_strobe_r <= '0';
+            s_reg_zybo_example_count_value_r <= ZYBO_EXAMPLE_COUNT_VALUE_RESET;
 
         elsif rising_edge(axi_aclk) then
             -- Default values:
             s_axi_awready_r <= '0';
             s_axi_wready_r  <= '0';
-            s_count_strobe_r <= '0';
+            s_zybo_example_count_strobe_r <= '0';
 
             case v_state_r is
 
@@ -261,106 +285,106 @@ begin
                     s_axi_bvalid_r              <= '1';
                     --
                     v_addr_hit := false;
-                    -- register 'COUNT' at address offset 0x0
-                    if s_axi_awaddr_reg_r = resize(COUNT_OFFSET, AXI_ADDR_WIDTH) then
+                    -- register 'Zybo_Example_COUNT' at address offset 0x8
+                    if s_axi_awaddr_reg_r = resize(ZYBO_EXAMPLE_COUNT_OFFSET, AXI_ADDR_WIDTH) then
                         v_addr_hit := true;
-                        s_count_strobe_r <= '1';
+                        s_zybo_example_count_strobe_r <= '1';
                         -- field 'value':
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(0) <= s_axi_wdata_reg_r(0); -- value(0)
+                            s_reg_zybo_example_count_value_r(0) <= s_axi_wdata_reg_r(0); -- value(0)
                         end if;
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(1) <= s_axi_wdata_reg_r(1); -- value(1)
+                            s_reg_zybo_example_count_value_r(1) <= s_axi_wdata_reg_r(1); -- value(1)
                         end if;
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(2) <= s_axi_wdata_reg_r(2); -- value(2)
+                            s_reg_zybo_example_count_value_r(2) <= s_axi_wdata_reg_r(2); -- value(2)
                         end if;
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(3) <= s_axi_wdata_reg_r(3); -- value(3)
+                            s_reg_zybo_example_count_value_r(3) <= s_axi_wdata_reg_r(3); -- value(3)
                         end if;
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(4) <= s_axi_wdata_reg_r(4); -- value(4)
+                            s_reg_zybo_example_count_value_r(4) <= s_axi_wdata_reg_r(4); -- value(4)
                         end if;
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(5) <= s_axi_wdata_reg_r(5); -- value(5)
+                            s_reg_zybo_example_count_value_r(5) <= s_axi_wdata_reg_r(5); -- value(5)
                         end if;
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(6) <= s_axi_wdata_reg_r(6); -- value(6)
+                            s_reg_zybo_example_count_value_r(6) <= s_axi_wdata_reg_r(6); -- value(6)
                         end if;
                         if s_axi_wstrb_reg_r(0) = '1' then
-                            s_reg_count_value_r(7) <= s_axi_wdata_reg_r(7); -- value(7)
+                            s_reg_zybo_example_count_value_r(7) <= s_axi_wdata_reg_r(7); -- value(7)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(8) <= s_axi_wdata_reg_r(8); -- value(8)
+                            s_reg_zybo_example_count_value_r(8) <= s_axi_wdata_reg_r(8); -- value(8)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(9) <= s_axi_wdata_reg_r(9); -- value(9)
+                            s_reg_zybo_example_count_value_r(9) <= s_axi_wdata_reg_r(9); -- value(9)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(10) <= s_axi_wdata_reg_r(10); -- value(10)
+                            s_reg_zybo_example_count_value_r(10) <= s_axi_wdata_reg_r(10); -- value(10)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(11) <= s_axi_wdata_reg_r(11); -- value(11)
+                            s_reg_zybo_example_count_value_r(11) <= s_axi_wdata_reg_r(11); -- value(11)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(12) <= s_axi_wdata_reg_r(12); -- value(12)
+                            s_reg_zybo_example_count_value_r(12) <= s_axi_wdata_reg_r(12); -- value(12)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(13) <= s_axi_wdata_reg_r(13); -- value(13)
+                            s_reg_zybo_example_count_value_r(13) <= s_axi_wdata_reg_r(13); -- value(13)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(14) <= s_axi_wdata_reg_r(14); -- value(14)
+                            s_reg_zybo_example_count_value_r(14) <= s_axi_wdata_reg_r(14); -- value(14)
                         end if;
                         if s_axi_wstrb_reg_r(1) = '1' then
-                            s_reg_count_value_r(15) <= s_axi_wdata_reg_r(15); -- value(15)
+                            s_reg_zybo_example_count_value_r(15) <= s_axi_wdata_reg_r(15); -- value(15)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(16) <= s_axi_wdata_reg_r(16); -- value(16)
+                            s_reg_zybo_example_count_value_r(16) <= s_axi_wdata_reg_r(16); -- value(16)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(17) <= s_axi_wdata_reg_r(17); -- value(17)
+                            s_reg_zybo_example_count_value_r(17) <= s_axi_wdata_reg_r(17); -- value(17)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(18) <= s_axi_wdata_reg_r(18); -- value(18)
+                            s_reg_zybo_example_count_value_r(18) <= s_axi_wdata_reg_r(18); -- value(18)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(19) <= s_axi_wdata_reg_r(19); -- value(19)
+                            s_reg_zybo_example_count_value_r(19) <= s_axi_wdata_reg_r(19); -- value(19)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(20) <= s_axi_wdata_reg_r(20); -- value(20)
+                            s_reg_zybo_example_count_value_r(20) <= s_axi_wdata_reg_r(20); -- value(20)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(21) <= s_axi_wdata_reg_r(21); -- value(21)
+                            s_reg_zybo_example_count_value_r(21) <= s_axi_wdata_reg_r(21); -- value(21)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(22) <= s_axi_wdata_reg_r(22); -- value(22)
+                            s_reg_zybo_example_count_value_r(22) <= s_axi_wdata_reg_r(22); -- value(22)
                         end if;
                         if s_axi_wstrb_reg_r(2) = '1' then
-                            s_reg_count_value_r(23) <= s_axi_wdata_reg_r(23); -- value(23)
+                            s_reg_zybo_example_count_value_r(23) <= s_axi_wdata_reg_r(23); -- value(23)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(24) <= s_axi_wdata_reg_r(24); -- value(24)
+                            s_reg_zybo_example_count_value_r(24) <= s_axi_wdata_reg_r(24); -- value(24)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(25) <= s_axi_wdata_reg_r(25); -- value(25)
+                            s_reg_zybo_example_count_value_r(25) <= s_axi_wdata_reg_r(25); -- value(25)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(26) <= s_axi_wdata_reg_r(26); -- value(26)
+                            s_reg_zybo_example_count_value_r(26) <= s_axi_wdata_reg_r(26); -- value(26)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(27) <= s_axi_wdata_reg_r(27); -- value(27)
+                            s_reg_zybo_example_count_value_r(27) <= s_axi_wdata_reg_r(27); -- value(27)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(28) <= s_axi_wdata_reg_r(28); -- value(28)
+                            s_reg_zybo_example_count_value_r(28) <= s_axi_wdata_reg_r(28); -- value(28)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(29) <= s_axi_wdata_reg_r(29); -- value(29)
+                            s_reg_zybo_example_count_value_r(29) <= s_axi_wdata_reg_r(29); -- value(29)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(30) <= s_axi_wdata_reg_r(30); -- value(30)
+                            s_reg_zybo_example_count_value_r(30) <= s_axi_wdata_reg_r(30); -- value(30)
                         end if;
                         if s_axi_wstrb_reg_r(3) = '1' then
-                            s_reg_count_value_r(31) <= s_axi_wdata_reg_r(31); -- value(31)
+                            s_reg_zybo_example_count_value_r(31) <= s_axi_wdata_reg_r(31); -- value(31)
                         end if;
                     end if;
                     --
@@ -398,7 +422,9 @@ begin
     s_axi_rresp   <= s_axi_rresp_r;
     s_axi_rdata   <= s_axi_rdata_r;
 
-    regs2user.count_strobe <= s_count_strobe_r;
-    regs2user.count_value <= s_reg_count_value_r;
+    regs2user.zybo_example_version_strobe <= s_zybo_example_version_strobe_r;
+    regs2user.zybo_example_config_id_strobe <= s_zybo_example_config_id_strobe_r;
+    regs2user.zybo_example_count_strobe <= s_zybo_example_count_strobe_r;
+    regs2user.zybo_example_count_value <= s_reg_zybo_example_count_value_r;
 
 end architecture RTL;

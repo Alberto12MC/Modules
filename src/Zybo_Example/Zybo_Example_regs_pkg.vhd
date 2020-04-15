@@ -1,8 +1,8 @@
 -- -----------------------------------------------------------------------------
--- 'ZYBO_EXAMPLE' Register Definitions
--- Revision: 1
+-- 'Zybo_Example' Register Definitions
+-- Revision: 10
 -- -----------------------------------------------------------------------------
--- Generated on 2020-03-14 at 00:25 (UTC) by airhdl version 2020.03.1
+-- Generated on 2020-04-15 at 15:06 (UTC) by airhdl version 2020.04.1
 -- -----------------------------------------------------------------------------
 -- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 -- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -21,7 +21,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package zybo_regs_pkg is
+package Zybo_Example_regs_pkg is
 
     -- Type definitions
     type slv1_array_t is array(natural range <>) of std_logic_vector(0 downto 0);
@@ -59,28 +59,43 @@ package zybo_regs_pkg is
 
     -- User-logic ports (from user-logic to register file)
     type user2regs_t is record
-        dummy : std_logic; -- a dummy element to prevent empty records
+        zybo_example_version_version : std_logic_vector(31 downto 0); -- value of register 'Zybo_Example_VERSION', field 'VERSION'
+        zybo_example_config_id_config_id : std_logic_vector(31 downto 0); -- value of register 'Zybo_Example_CONFIG_ID', field 'CONFIG_ID'
     end record;
 
     -- User-logic ports (from register file to user-logic)
     type regs2user_t is record
-        count_strobe : std_logic; -- Strobe signal for register 'COUNT' (pulsed when the register is written from the bus}
-        count_value : std_logic_vector(31 downto 0); -- Value of register 'COUNT', field 'value'
+        zybo_example_version_strobe : std_logic; -- Strobe signal for register 'Zybo_Example_VERSION' (pulsed when the register is read from the bus}
+        zybo_example_config_id_strobe : std_logic; -- Strobe signal for register 'Zybo_Example_CONFIG_ID' (pulsed when the register is read from the bus}
+        zybo_example_count_strobe : std_logic; -- Strobe signal for register 'Zybo_Example_COUNT' (pulsed when the register is written from the bus}
+        zybo_example_count_value : std_logic_vector(31 downto 0); -- Value of register 'Zybo_Example_COUNT', field 'value'
     end record;
 
-    -- Revision number of the 'ZYBO_EXAMPLE' register map
-    constant ZYBO_EXAMPLE_REVISION : natural := 1;
+    -- Revision number of the 'Zybo_Example' register map
+    constant ZYBO_EXAMPLE_REVISION : natural := 10;
 
-    -- Default base address of the 'ZYBO_EXAMPLE' register map
+    -- Default base address of the 'Zybo_Example' register map
     constant ZYBO_EXAMPLE_DEFAULT_BASEADDR : unsigned(31 downto 0) := unsigned'(x"00000000");
 
-    -- Register 'COUNT'
-    constant COUNT_OFFSET : unsigned(31 downto 0) := unsigned'(x"00000000"); -- address offset of the 'COUNT' register
-    constant COUNT_VALUE_BIT_OFFSET : natural := 0; -- bit offset of the 'value' field
-    constant COUNT_VALUE_BIT_WIDTH : natural := 32; -- bit width of the 'value' field
-    constant COUNT_VALUE_RESET : std_logic_vector(31 downto 0) := std_logic_vector'("00000010000000000000000000000000"); -- reset value of the 'value' field
+    -- Register 'Zybo_Example_VERSION'
+    constant ZYBO_EXAMPLE_VERSION_OFFSET : unsigned(31 downto 0) := unsigned'(x"00000000"); -- address offset of the 'Zybo_Example_VERSION' register
+    constant ZYBO_EXAMPLE_VERSION_VERSION_BIT_OFFSET : natural := 0; -- bit offset of the 'VERSION' field
+    constant ZYBO_EXAMPLE_VERSION_VERSION_BIT_WIDTH : natural := 32; -- bit width of the 'VERSION' field
+    constant ZYBO_EXAMPLE_VERSION_VERSION_RESET : std_logic_vector(31 downto 0) := std_logic_vector'("00000000000000000000000000000001"); -- reset value of the 'VERSION' field
 
-    component zybo_regs is
+    -- Register 'Zybo_Example_CONFIG_ID'
+    constant ZYBO_EXAMPLE_CONFIG_ID_OFFSET : unsigned(31 downto 0) := unsigned'(x"00000004"); -- address offset of the 'Zybo_Example_CONFIG_ID' register
+    constant ZYBO_EXAMPLE_CONFIG_ID_CONFIG_ID_BIT_OFFSET : natural := 0; -- bit offset of the 'CONFIG_ID' field
+    constant ZYBO_EXAMPLE_CONFIG_ID_CONFIG_ID_BIT_WIDTH : natural := 32; -- bit width of the 'CONFIG_ID' field
+    constant ZYBO_EXAMPLE_CONFIG_ID_CONFIG_ID_RESET : std_logic_vector(31 downto 0) := std_logic_vector'("00000000000000000000000000000001"); -- reset value of the 'CONFIG_ID' field
+
+    -- Register 'Zybo_Example_COUNT'
+    constant ZYBO_EXAMPLE_COUNT_OFFSET : unsigned(31 downto 0) := unsigned'(x"00000008"); -- address offset of the 'Zybo_Example_COUNT' register
+    constant ZYBO_EXAMPLE_COUNT_VALUE_BIT_OFFSET : natural := 0; -- bit offset of the 'value' field
+    constant ZYBO_EXAMPLE_COUNT_VALUE_BIT_WIDTH : natural := 32; -- bit width of the 'value' field
+    constant ZYBO_EXAMPLE_COUNT_VALUE_RESET : std_logic_vector(31 downto 0) := std_logic_vector'(x"02000000"); -- reset value of the 'value' field
+
+    component Zybo_Example_regs is
       generic (
         AXI_ADDR_WIDTH : integer := 32
       );
@@ -111,4 +126,4 @@ package zybo_regs_pkg is
       );
     end component;
 
-end zybo_regs_pkg;
+end Zybo_Example_regs_pkg;
