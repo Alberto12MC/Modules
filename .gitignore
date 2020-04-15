@@ -17,3 +17,7 @@ tmp
 *.s
 out.xml
 modelsim.do
+build/
+sim_build/
+__pycache__/
+.pytest_cache/

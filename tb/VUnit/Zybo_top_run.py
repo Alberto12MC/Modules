@@ -102,10 +102,10 @@ ui.add_array_util()
 
 #Add module sources.
 Zybo_top_src_lib = ui.add_library("src_lib")
-Zybo_top_src_lib.add_source_files("../src/zybo_top_pkg.vhd")
-Zybo_top_src_lib.add_source_files("../src/zybo_top.vhd")
-Zybo_top_src_lib.add_source_files("../src/zybo_regs_pkg.vhd")
-Zybo_top_src_lib.add_source_files("../src/zybo_regs.vhd")
+Zybo_top_src_lib.add_source_files("../../src/zybo_top_pkg.vhd")
+Zybo_top_src_lib.add_source_files("../../src/zybo_top.vhd")
+Zybo_top_src_lib.add_source_files("../../src/zybo_regs_pkg.vhd")
+Zybo_top_src_lib.add_source_files("../../src/zybo_regs.vhd")
 
 #Add tb sources.
 Zybo_top_tb_lib = ui.add_library("tb_lib")
