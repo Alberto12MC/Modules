@@ -10,14 +10,14 @@ Module top is: Zybo_Example.vhd
 
 Example:
 
-OFFSET | LABEL                      | R/W | SC | DESCRIPTION                                      | RESET VALUE
-:----: | -------------------------- | :-: | -- | ------------------------------------------------ | -----------
-0x0000 | **Zybo_Example_VERSION**   |     |    |                                                  |             |
-       | _[31:0] Version_           |  R  | NO | Version info                                     | VERSION     |
-0x0004 | **Zybo_Example_CONFIG_ID** |     |    |                                                  |             |
-       | _[31:0] Config ID_         |  R  | NO | Id Info                                          | CONFIG_ID   |
-0x0008 | **Zybo_Example_COUNT**     |     |    |                                                  |             |
-       | _[31:0] Count_             | R/W | NO | Count for the timer which changes the LED colour | 0x02000000  |
+|OFFSET | LABEL                      | R/W | SC | DESCRIPTION                                      | RESET VALUE |
+|:----: | -------------------------- | :-: | -- | ------------------------------------------------ | ----------- |
+|0x0000 | **Zybo_Example_VERSION**   |     |    |                                                  |             |
+|       | _[31:0] Version_           |  R  | NO | Version info                                     | VERSION     |
+|0x0004 | **Zybo_Example_CONFIG_ID** |     |    |                                                  |             |
+|       | _[31:0] Config ID_         |  R  | NO | Id Info                                          | CONFIG_ID   |
+|0x0008 | **Zybo_Example_COUNT**     |     |    |                                                  |             |
+|       | _[31:0] Count_             | R/W | NO | Count for the timer which changes the LED colour | 0x02000000  |
 
 ## Generic description table
 
