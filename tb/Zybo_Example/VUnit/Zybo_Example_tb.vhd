@@ -69,7 +69,7 @@ architecture bench of Zybo_Example_tb is
   constant ZYBO_EXAMPLE_CONFIG_ID_CONFIG_ID_RESET : std_logic_vector(31 downto 0) := std_logic_vector'("00000000000000000000000000000001");
   constant ZYBO_EXAMPLE_COUNT_VALUE_RESET : std_logic_vector(31 downto 0) := std_logic_vector'(x"02000000");
   constant axil_bus : bus_master_t := new_bus(data_length => 32, address_length => 32);
-
+  signal tc : std_logic;
 begin
   -- AXI-Lite BFM
   axi_lite_master_inst: entity vunit_lib.axi_lite_master
@@ -130,7 +130,7 @@ begin
     s_axi_bready              => s_axi_bready
   );
 
-  test_runner_watchdog(runner, 1 ms);
+  test_runner_watchdog(runner, 100 ms);
 
   main : process
     variable v_rdata_out : std_logic_vector(31 downto 0);
@@ -161,6 +161,33 @@ begin
         info("AXI-Lite -> Read: " & to_string((unsigned(v_rdata_out))) & " at address: " & to_string((unsigned(add))));
         check(ZYBO_EXAMPLE_COUNT_VALUE_RESET=v_rdata_out, "Count wrong");
         wait for 10 * axi_aclk_period;
+        test_runner_cleanup(runner);
+
+      elsif run("test_0") then
+        info("Hello world test_0");
+        axi_aresetn <= '0';
+        reset <= '1';
+        wait for 10 * axi_aclk_period;
+        axi_aresetn <= '1';
+        reset <= '0';
+        wait for clk_period;
+        Zybo_Example_sw_in <= "0010";
+        Zybo_Example_bt_in <= "0100";
+        check(Zybo_Example_leds_out=(Zybo_Example_bt_in or Zybo_Example_sw_in), "Leds wrong");
+        wait for clk_period;
+        Zybo_Example_sw_in <= "1010";
+        Zybo_Example_bt_in <= "0101";
+        check(Zybo_Example_leds_out=(Zybo_Example_bt_in or Zybo_Example_sw_in), "Leds wrong");
+        wait for clk_period;
+        add := BASEADDR + ZYBO_EXAMPLE_COUNT_OFFSET;
+        write_bus(net, axil_bus, std_logic_vector(add), x"00000001");
+        info("AXI-Lite -> Write: 0x00000001 at address: " & to_string((unsigned(add))));
+        check(Zybo_Example_leds_rgb_out="100100", "Leds RGB wrong");
+        wait on Zybo_Example_leds_rgb_out;
+        check(Zybo_Example_leds_rgb_out="010010", "Leds RGB wrong");
+        wait on Zybo_Example_leds_rgb_out;
+        check(Zybo_Example_leds_rgb_out="001001", "Leds RGB wrong");
+        wait for clk_period;
         test_runner_cleanup(runner);
       end if;
     end loop;

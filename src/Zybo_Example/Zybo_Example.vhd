@@ -110,7 +110,7 @@ begin
   r0_counter : process(clk)
   begin
     if rising_edge(clk) then
-        if (r0_count < r0_limit_count) then
+        if (r0_count <= r0_limit_count) then
           r0_count <= std_logic_vector(unsigned(r0_count) + 1);
           r0_tc <= '0';
         else
