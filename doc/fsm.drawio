@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-04-22T23:28:48.249Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36" etag="DIl6AvpiGllHMfmcY5T_" version="13.0.1" type="github">
+<mxfile host="app.diagrams.net" modified="2020-04-22T23:29:01.226Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36" etag="UgzNWFJ9TwAVvvyaVLpv" version="13.0.1" type="github">
   <diagram id="4TcxVArkRIETSUPfzttK" name="Page-1">
     <mxGraphModel dx="1422" dy="774" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -30,7 +30,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e7zdQVzPoWm0Xn6h0XEB-2" value="&lt;b style=&quot;font-size: 16px&quot;&gt;FREE_MODE&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+        <mxCell id="e7zdQVzPoWm0Xn6h0XEB-2" value="&lt;b style=&quot;font-size: 16px&quot;&gt;FIXED_MODE&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="530" y="240" width="120" height="80" as="geometry" />
         </mxCell>
       </root>
