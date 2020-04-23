@@ -3,7 +3,7 @@ VHDL_SOURCES = $(PWD)/../../../src/Zybo_Example/Zybo_Example_regs_pkg.vhd
 VHDL_SOURCES += $(PWD)/../../../src/Zybo_Example/Zybo_Example_regs.vhd
 VHDL_SOURCES += $(PWD)/../../../src/Zybo_Example/Zybo_Example_pkg.vhd
 VHDL_SOURCES += $(PWD)/../../../src/Zybo_Example/Zybo_Example.vhd
-TOPLEVEL=Zybo_Example
+TOPLEVEL=zybo_example
 MODULE=Zybo_Example_tb
 SIM=ghdl
 SIM_ARGS=--wave=salida.ghws

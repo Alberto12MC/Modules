@@ -26,35 +26,45 @@ entity fsm is
          fsm_in_1 : in std_logic;
          --Outputs
          fsm_out_0 : out std_logic;
-         fsm_out_1 : out std_logic;
-         fsm_out_2 : out std_logic
+         fsm_out_1 : out std_logic
   );
 end fsm;
 
 architecture rtl of fsm is
-type fsm_states_type is (idle, read1, read2);
+type fsm_states_type is (IDLE, FREE_MODE, FIXED_MODE);
 signal fsm_state: fsm_states_type;
+attribute enum_encoding: string;
+attribute enum_encoding of fsm_states_type: type is "one_hot";
 
 begin
-  fsm_process: process(clk, reset)
+  fsm_process: process(clk)
   begin
     if reset = '1' then
-      state <= S0;
-      Z <= '0';
+      fsm_state <= IDLE;
+      fsm_out_0 <= '0';
+      fsm_out_1 <= '0';
     elsif (rising_edge(clk)) then
+      fsm_out_0 <= '0';
+      fsm_out_1 <= '0';
       case fsm_state is
-        when S0 =>
-          if X = '0' then
-            state <= S0;
-          elsif X = '1' then
-            state <= S1;
+        when IDLE =>
+          fsm_state <= FREE_MODE;
+        when FREE_MODE =>
+          fsm_out_0 <= '1';
+          if fsm_in_0='1' then
+            fsm_state <= FIXED_MODE;
+          else
+            fsm_state <= FREE_MODE;
           end if;
-            Z <= '0';
-        when S1 =>
-
+        when FIXED_MODE =>
+          fsm_out_1 <= '1';
+          if fsm_in_1='1' then
+            fsm_state <= FREE_MODE;
+          else
+            fsm_state <= FIXED_MODE;
+          end if;
         when others =>
-          state <= idle;
-          Z <= '0';
+          fsm_state <= IDLE;
       end case;
     end if;
   end process;
