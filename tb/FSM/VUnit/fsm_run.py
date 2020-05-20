@@ -46,8 +46,8 @@ ui.add_array_util()
 
 #Add module sources.
 fsm_src_lib = ui.add_library("src_lib")
-fsm_src_lib.add_source_files("../../src/FSM/fsm.vhd")
-fsm_src_lib.add_source_files("../../src/FSM/fsm_pkg.vhd")
+fsm_src_lib.add_source_files("../../../src/FSM/fsm.vhd")
+fsm_src_lib.add_source_files("../../../src/FSM/fsm_pkg.vhd")
 
 #Add tb sources.
 fsm_tb_lib = ui.add_library("tb_lib")
