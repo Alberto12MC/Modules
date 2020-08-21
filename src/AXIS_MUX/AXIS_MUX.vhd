@@ -22,6 +22,8 @@ entity AXIS_MUX is
       g_AXI_ADDR_WIDTH : integer := 4
   );
   port (
+     -- AXI-Stream clock
+     axis_aclk : in std_logic;
      -- AXI-Stream Slaves
      s0_axis_tdata  : in std_logic_vector(g_AXIS_DATA_WIDTH-1 downto 0);
      s0_axis_tvalid : in std_logic;
@@ -65,8 +67,9 @@ architecture rtl of AXIS_MUX is
   -- signals
   signal s_user2regs: user2regs_t;
   signal s_regs2user: regs2user_t;
-  signal s_resetn : std_logic;
-  signal s_select : std_logic;
+  -- r0
+  signal r0_resetn : std_logic;
+  signal r0_select : std_logic;
 begin
 
   -- AXI-Lite
@@ -99,23 +102,33 @@ begin
     user2regs     => s_user2regs,
     regs2user     => s_regs2user
   );
-  s_resetn <= s_regs2user.axis_mux_control_resetn(0);
-  s_select <= s_regs2user.axis_mux_control_select(0);
-  -- combinational
-  MUX: process
+
+  -- Reg 
+  process(axis_aclk)
   begin
-    if s_resetn = '0' then
-      m_axis_tdata <= (others => '0');
-      m_axis_tvalid <= '0';
-    else
-      if s_select = '0' then
-        m_axis_tdata <= s0_axis_tdata;
-        m_axis_tvalid <= s0_axis_tvalid;
-      else
-        m_axis_tdata <= s1_axis_tdata;
-        m_axis_tvalid <= s1_axis_tvalid;
-      end if;
+    if rising_edge(axis_aclk) then
+      r0_resetn <= s_regs2user.axis_mux_control_resetn(0);
+      r0_select <= s_regs2user.axis_mux_control_select(0);
     end if;
+  end process;
+
+  -- MUX
+  MUX: process(axis_aclk)
+  begin
+      if rising_edge(axis_aclk) then
+        if r0_resetn = '0' then
+          m_axis_tdata <= (others => '0');
+          m_axis_tvalid <= '0';
+        else
+          if r0_select = '0' then
+            m_axis_tdata <= s0_axis_tdata;
+            m_axis_tvalid <= s0_axis_tvalid;
+          else
+            m_axis_tdata <= s1_axis_tdata;
+            m_axis_tvalid <= s1_axis_tvalid;
+          end if;
+        end if;
+      end if;
   end process;
 
 end rtl;
