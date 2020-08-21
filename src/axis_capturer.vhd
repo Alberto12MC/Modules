@@ -53,8 +53,8 @@ begin
         r0_counter <= (others => '0');
       else
         if s0_axis_tvalid = '1' then
-          r0_counter <= std_logic_vector(unsigned(r0_counter) + '1');
-          if r0_counter == x"FFF" then
+          r0_counter <= std_logic_vector(unsigned(r0_counter) + 1);
+          if r0_counter = x"FFF" then
             r0_axis_tlast <= '1';
           else
             r0_axis_tlast <= '0';
