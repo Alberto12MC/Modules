@@ -30,7 +30,8 @@ entity axis_capturer is
     -- AXI-Stream Master
     m0_axis_tdata  : out std_logic_vector(g_AXIS_DATA_WIDTH - 1 downto 0);
     m0_axis_tvalid : out std_logic;
-    m0_axis_tlast  : out std_logic
+    m0_axis_tlast  : out std_logic;
+    m0_axis_tready : in std_logic
   );
 end axis_capturer;
 
@@ -52,7 +53,7 @@ begin
       if axis_resetn = '0' then
         r0_counter <= (others => '0');
       else
-        if s0_axis_tvalid = '1' then
+        if s0_axis_tvalid = '1' and m0_axis_tready = '1' then
           r0_counter <= std_logic_vector(unsigned(r0_counter) + 1);
           if r0_counter = x"FFF" then
             r0_axis_tlast <= '1';
